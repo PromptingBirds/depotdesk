@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DepotDesk</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/">
+        <img src="/favicon.svg" alt="" width="24" height="24" />
+        <span>DepotDesk</span>
+      </a>
+      <nav class="kpis" id="kpis" aria-label="Kennzahlen"></nav>
+      <label class="user-switch">
+        <span>Angemeldet als</span>
+        <select id="user-select" aria-label="Demo-Nutzer wählen"></select>
+      </label>
+    </header>
+
+    <main>
+      <section class="toolbar">
+        <form id="filters" class="filters" autocomplete="off">
+          <input type="search" name="q" placeholder="Auftrag, Fahrzeug oder Titel" aria-label="Suche" />
+          <select name="status" aria-label="Status"></select>
+          <select name="depot" aria-label="Werk"></select>
+          <select name="type" aria-label="Auftragstyp"></select>
+          <select name="priority" aria-label="Priorität"></select>
+          <label class="inline">Fällig ab <input type="date" name="dueFrom" /></label>
+          <label class="inline">bis <input type="date" name="dueTo" /></label>
+          <label class="check"><input type="checkbox" name="overdue" /> nur überfällige</label>
+          <label class="check" data-role="technician"><input type="checkbox" name="mine" /> nur meine</label>
+          <button type="reset" class="ghost">Zurücksetzen</button>
+        </form>
+        <div class="toolbar-actions">
+          <button id="new-order" class="primary" hidden>Neuer Auftrag</button>
+        </div>
+      </section>
+
+      <section class="table-wrap">
+        <table id="orders">
+          <thead>
+            <tr>
+              <th data-sort="id">Auftrag</th>
+              <th>Fahrzeug</th>
+              <th>Titel</th>
+              <th>Typ</th>
+              <th data-sort="priority">Priorität</th>
+              <th>Status</th>
+              <th>Werk</th>
+              <th>Zuständig</th>
+              <th data-sort="dueDate">Fällig</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p class="empty" id="empty" hidden>Keine Aufträge für diese Filter.</p>
+      </section>
+
+      <footer class="pager">
+        <span id="range" aria-live="polite"></span>
+        <label class="inline">
+          Pro Seite
+          <select id="page-size">
+            <option>25</option>
+            <option selected>50</option>
+            <option>100</option>
+          </select>
+        </label>
+        <button id="prev" class="ghost">Zurück</button>
+        <button id="next" class="ghost">Weiter</button>
+      </footer>
+    </main>
+
+    <aside id="drawer" class="drawer" hidden aria-labelledby="drawer-title">
+      <div class="drawer-head">
+        <div>
+          <p class="muted" id="drawer-id"></p>
+          <h2 id="drawer-title"></h2>
+        </div>
+        <button class="ghost icon" id="drawer-close" aria-label="Schließen">✕</button>
+      </div>
+      <div id="drawer-body"></div>
+    </aside>
+
+    <dialog id="create-dialog">
+      <form id="create-form" method="dialog">
+        <h2>Neuer Auftrag</h2>
+        <label>Fahrzeug <select name="vehicleId" required></select></label>
+        <div class="row">
+          <label>Typ <select name="type" required></select></label>
+          <label>Priorität <select name="priority" required></select></label>
+        </div>
+        <label>Titel <input name="title" required minlength="3" maxlength="120" /></label>
+        <label>Beschreibung <textarea name="description" rows="4" maxlength="4000"></textarea></label>
+        <div class="row">
+          <label>Fällig am <input type="date" name="dueDate" required /></label>
+          <label>Zuständig <select name="assigneeId"></select></label>
+        </div>
+        <p class="form-error" id="create-error" hidden></p>
+        <div class="dialog-actions">
+          <button type="button" class="ghost" id="create-cancel">Abbrechen</button>
+          <button type="submit" class="primary">Anlegen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>
